@@ -4,20 +4,28 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500..900&display=swap"
-      rel="stylesheet"
-    />
-    <title>Timer&Snackbar</title>
+    <title>Gallery</title>
     <link rel="stylesheet" href="./css/styles.css" />
   </head>
   <body>
     <load src="./partials/header.html" icon-path="img/sprite.svg#logo" />
     <main>
-      <!-- <a href="./1-timer.html" class="link-page">Timer</a>
-      <a href="./2-snackbar.html" class="link-page">Snackbar</a> -->
+      <section class="galery-form">
+        <div class="container">
+          <h2 class="title">Search image</h2>
+          <form class="form">
+            <input
+              class="form__input js-form-input"
+              type="text"
+              name="search"
+              placeholder="Search image..."
+              autofocus
+            />
+            <button type="submit" class="form__btn js-form-btn">Submit</button>
+          </form>
+          <ul class="gallery"></ul>
+        </div>
+      </section>
     </main>
     <load src="./partials/footer.html" />
     <script type="module" src="./main.js"></script>
