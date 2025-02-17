@@ -62,69 +62,90 @@ const errorAlertInstance = new ErrorAlert(
 
 const imgList = document.querySelector('.gallery');
 const searchForm = document.querySelector('.form');
+const loader = document.querySelector('.loader');
 
-searchForm.addEventListener('submit', async e => {
+searchForm.addEventListener('submit', e => {
   e.preventDefault();
   const searchExpression = searchInputExpretion();
   if (!searchExpression) {
     return;
   }
-  parametersObject.searchExpression = searchInputExpretion();
-  try {
-    const gallery = await fetchImage(parametersObject);
-    if (gallery.hits.length === 0) {
-      errorAlertInstance.error();
-    }
-    imgList.insertAdjacentHTML('beforeend', renderGaleryImg(gallery.hits));
-    galleryInner.refresh();
-  } catch (error) {
-    console.log(error);
-  }
+  parametersObject.searchExpression = searchExpression;
+  loader.style.display = 'inline-block';
+  fetchImage(parametersObject)
+    .then(gallery => {
+      if (gallery.hits.length === 0) {
+        errorAlertInstance.error();
+      }
+      imgList.innerHTML = renderGaleryImg(gallery.hits);
+      const galleryInner = new SimpleLightbox('.gallery a', {
+        captions: true,
+        captionsData: 'alt',
+        captionDelay: 250,
+        animationSpeed: 300,
+        animationSlide: true,
+        overlay: true,
+        overlayOpacity: 0.8,
+      });
+      galleryInner.on('shown.simplelightbox', () => {
+        const lightboxContainer = document.querySelector('.simple-lightbox');
+        if (!lightboxContainer) return;
+      });
+      galleryInner.refresh();
+    })
+    .catch(error => {
+      console.log(error);
+    })
+    .finally(() => {
+      loader.style.display = 'none';
+    });
   searchForm.reset();
 });
 
 function searchInputExpretion() {
   const searchInput = document.querySelector('.js-form-input');
-  const searchData = searchInput.value;
-  const isLetters = /^[a-zA-Zа-яА-ЯёЁіІїЇєЄ]*$/;
+  const searchData = searchInput.value.replace(/\d+/g, '').replace(/ /g, '+');
+
   if (searchData === '') {
     const InfoAlertInstans = new InfoAlert('Please enter a search term');
     InfoAlertInstans.info();
-
-    return;
-  } else if (!isLetters.test(searchData)) {
-    const InfoAlertInstans = new InfoAlert('Please enter letters only.');
-    InfoAlertInstans.info();
     return;
   }
-  console.log('searchData', searchData);
   return searchData;
 }
 
-const galleryInner = new SimpleLightbox('.gallery a', {
-  animationSpeed: 300,
-  animationSlide: true,
-  captionDelay: 250,
-  overlay: true,
-  overlayOpacity: 0.8,
-});
-
-galleryInner.on('shown.simplelightbox', () => {
-  const lightboxContainer = document.querySelector('.simple-lightbox');
-  const slClouse = lightboxContainer.firstElementChild;
-  if (!lightboxContainer) return;
-  const slNavigationBtn = document.querySelectorAll('.sl-navigation button');
-  const slCounter = document.querySelector('.sl-counter');
-
-  Object.assign(slClouse.style, lightboxStyle.slClouse);
-  slNavigationBtn.forEach(item => {
-    Object.assign(item.style, lightboxStyle.slNavigationBtn);
-    item.className === 'sl-prev'
-      ? Object.assign(item.style, lightboxStyle.slPrev)
-      : null;
-    item.className === 'sl-next'
-      ? Object.assign(item.style, lightboxStyle.slNext)
-      : null;
-  });
-  Object.assign(slCounter.style, lightboxStyle.slCounter);
-});
+// searchForm.addEventListener('submit', async e => {
+//   e.preventDefault();
+//   const searchExpression = searchInputExpretion();
+//   if (!searchExpression) {
+//     return;
+//   }
+//   parametersObject.searchExpression = searchInputExpretion();
+//   try {
+//     loader.style.display = 'inline-block';
+//     const gallery = await fetchImage(parametersObject);
+//     if (gallery.hits.length === 0) {
+//       errorAlertInstance.error();
+//     }
+//     imgList.innerHTML = renderGaleryImg(gallery.hits);
+//     const galleryInner = new SimpleLightbox('.gallery a', {
+//       captions: true,
+//       captionsData: 'alt',
+//       captionDelay: 250,
+//       animationSpeed: 300,
+//       animationSlide: true,
+//       overlay: true,
+//       overlayOpacity: 0.8,
+//     });
+//     galleryInner.on('shown.simplelightbox', () => {
+//       const lightboxContainer = document.querySelector('.simple-lightbox');
+//       if (!lightboxContainer) return;
+//     });
+//     galleryInner.refresh();
+//   } catch (error) {
+//     console.log(error);
+//   } finally {
+//     loader.style.display = 'none';
+//   }
+//   searchForm.reset();
+// });
