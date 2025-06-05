@@ -9,7 +9,7 @@ import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const parametersObject = {
   urlBase: 'https://pixabay.com/api/',
-  apiKey: '48839660-7b8b283c3689698998fc631e5',
+  apiKey: import.meta.env.VITE_API_KEY,
   searchExpression: null,
   type: 'photo',
   orientation: 'horizontal',
@@ -113,39 +113,3 @@ function searchInputExpretion() {
   }
   return searchData;
 }
-
-// searchForm.addEventListener('submit', async e => {
-//   e.preventDefault();
-//   const searchExpression = searchInputExpretion();
-//   if (!searchExpression) {
-//     return;
-//   }
-//   parametersObject.searchExpression = searchInputExpretion();
-//   try {
-//     loader.style.display = 'inline-block';
-//     const gallery = await fetchImage(parametersObject);
-//     if (gallery.hits.length === 0) {
-//       errorAlertInstance.error();
-//     }
-//     imgList.innerHTML = renderGaleryImg(gallery.hits);
-//     const galleryInner = new SimpleLightbox('.gallery a', {
-//       captions: true,
-//       captionsData: 'alt',
-//       captionDelay: 250,
-//       animationSpeed: 300,
-//       animationSlide: true,
-//       overlay: true,
-//       overlayOpacity: 0.8,
-//     });
-//     galleryInner.on('shown.simplelightbox', () => {
-//       const lightboxContainer = document.querySelector('.simple-lightbox');
-//       if (!lightboxContainer) return;
-//     });
-//     galleryInner.refresh();
-//   } catch (error) {
-//     console.log(error);
-//   } finally {
-//     loader.style.display = 'none';
-//   }
-//   searchForm.reset();
-// });
